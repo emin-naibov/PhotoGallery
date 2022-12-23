@@ -17,7 +17,7 @@
                 <RowDefinition Height="15*"/>
                 <RowDefinition Height="*"/> 
             </Grid.RowDefinitions>
-            <ListBox MouseLeftButtonDown="FolderListBox_MouseLeftButtonDown" x:Name="FolderListBox" DisplayMemberPath="Url" >
+            <ListBox  x:Name="FolderListBox" DisplayMemberPath="Url" >
                 <!--<ListBox.ItemTemplate>
                     <DataTemplate >
                         
@@ -32,7 +32,7 @@
             </UniformGrid>
         </Grid>
 
-        <ListBox Grid.Column="1" ItemsSource="{Binding ElementName=FolderListBox, Path=SelectedItem.Images}">
+        <ListBox x:Name="ImageListBox" Grid.Column="1" ItemsSource="{Binding ElementName=FolderListBox, Path=SelectedItem.Images}">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <StackPanel Orientation="Horizontal"  >
