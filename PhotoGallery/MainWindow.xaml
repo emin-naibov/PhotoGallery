@@ -17,7 +17,7 @@
                 <RowDefinition Height="15*"/>
                 <RowDefinition Height="*"/> 
             </Grid.RowDefinitions>
-            <ListBox x:Name="FolderListBox" DisplayMemberPath="Url" >
+            <ListBox MouseLeftButtonDown="FolderListBox_MouseLeftButtonDown" x:Name="FolderListBox" DisplayMemberPath="Url" >
                 <!--<ListBox.ItemTemplate>
                     <DataTemplate >
                         
@@ -32,8 +32,36 @@
             </UniformGrid>
         </Grid>
 
-        <ListBox Grid.Column="1">
-            <!--<Image x:Name="Image_1" Source="{Binding FolderListBox}"/>-->
+        <ListBox Grid.Column="1" ItemsSource="{Binding ElementName=FolderListBox, Path=SelectedItem.Images}">
+            <ListBox.ItemTemplate>
+                <DataTemplate >
+                    <StackPanel Orientation="Horizontal"  >
+                        <Grid Background="#FFFAF7FB">
+                            <Image  Margin="5" Height="100" Width="100" Source="{Binding Photo}"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <WrapPanel Grid.Row="0">
+                                <TextBlock>Name :</TextBlock>
+                                <TextBlock x:Name="Path" Grid.Row="0" Text="{Binding Name}"/>
+                            </WrapPanel>
+                            <WrapPanel Grid.Row="1">
+                                <TextBlock>Creating :</TextBlock>
+                                <TextBlock x:Name="creatingData" Grid.Row="1" Text="{Binding creatingTime}"/>
+                            </WrapPanel>
+                            <WrapPanel Grid.Row="2">
+                                <TextBlock>Updating :</TextBlock>
+                                <TextBlock x:Name="updateDate" Grid.Row="2" Text="{Binding updatingTime}"/>
+                            </WrapPanel>
+                        </Grid>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
 
     </Grid>
