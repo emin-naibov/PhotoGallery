@@ -46,6 +46,7 @@ namespace PhotoGallery
             //Images = JsonSerializer.Deserialize<List<Account>>(json);
             Folder folder = new Folder(dialog.FileName);
             Folders.Add(folder);
+            //
         }
         public class Image
         {
