@@ -21,32 +21,30 @@ namespace PhotoGallery
   
     public partial class MainWindow : Window
     {
-       // public ObservableCollection<Image> Images { get; set; }
         public ObservableCollection<Folder> Folders { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            //Images = new ObservableCollection<Image>();
             Folders = new ObservableCollection<Folder>();
             FolderListBox.ItemsSource = Folders;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddButtonClick(object sender, RoutedEventArgs e)
         {
+            try
+            {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
             dialog.InitialDirectory = "C:\\Users";
             dialog.IsFolderPicker = true;
             dialog.ShowDialog();
-            //if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            //{
-            //    MessageBox.Show("You selected: " + dialog.FileName);
-            //}
-            //Folders.Add(Path.GetFileName(dialog.FileName), null);
-            // Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            //string json = File.ReadAllText(@$"{dialog.FileName}");
-            //Images = JsonSerializer.Deserialize<List<Account>>(json);
             Folder folder = new Folder(dialog.FileName);
             Folders.Add(folder);
-            //
+
+            }
+            catch (Exception)
+            {
+
+               MessageBox.Show("Choose Folder");
+            }
         }
         public class Image
         {
@@ -55,8 +53,8 @@ namespace PhotoGallery
                 Photo = path;
                 Name = Path.GetFileName(path);
                 FileInfo fileInfo = new FileInfo(path);
-                creatingTime = fileInfo.LastWriteTime.ToString();
-                //creatingTime = File.GetCreationTime(path).ToString();
+                //creatingTime = fileInfo.LastWriteTime.ToString();  also an option
+                creatingTime = File.GetCreationTime(path).ToString();
                 updatingTime = File.GetLastWriteTime(path).ToString();
             }
 
@@ -76,12 +74,35 @@ namespace PhotoGallery
                     Image image = new Image(item);
                     Images.Add(image);
                 }
-               // Images = JsonSerializer.Deserialize<ObservableCollection<Image>>(url);
-                //Images = images;
             }
 
             public string Url { get; set; }
             public ObservableCollection<Image> Images { get; set; } = new ObservableCollection<Image>();
+        }
+
+        private void ImageListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            new ImagesWindow(Folders[FolderListBox.SelectedIndex].Images[ImageListBox.SelectedIndex].Photo, this).Show();
+        }
+        public string GetNext()
+        {
+            if (ImageListBox.SelectedIndex < ImageListBox.Items.Count)
+                ImageListBox.SelectedIndex++;
+            return Folders[FolderListBox.SelectedIndex].Images[ImageListBox.SelectedIndex].Photo;
+        }
+        public string GetPrevious()
+        {
+            if (ImageListBox.SelectedIndex-1>=0)
+                ImageListBox.SelectedIndex--;
+            return Folders[FolderListBox.SelectedIndex].Images[ImageListBox.SelectedIndex].Photo;
+        }
+
+        private void RemoveButtonClick(object sender, RoutedEventArgs e)
+        {
+            if(FolderListBox.SelectedIndex!=-1)
+            {
+                Folders.RemoveAt(FolderListBox.SelectedIndex);
+            }
         }
     }
 
