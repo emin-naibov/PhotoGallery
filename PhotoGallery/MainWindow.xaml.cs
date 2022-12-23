@@ -54,7 +54,9 @@ namespace PhotoGallery
             {
                 Photo = path;
                 Name = Path.GetFileName(path);
-                creatingTime = File.GetCreationTime(path).ToString();
+                FileInfo fileInfo = new FileInfo(path);
+                creatingTime = fileInfo.LastWriteTime.ToString();
+                //creatingTime = File.GetCreationTime(path).ToString();
                 updatingTime = File.GetLastWriteTime(path).ToString();
             }
 
