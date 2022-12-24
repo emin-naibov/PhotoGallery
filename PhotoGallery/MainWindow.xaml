@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoGallery"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-    <!--xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="PhotoGallery" Height="450" Width="800"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource    MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"-->>
+        FontFamily="{DynamicResource MaterialDesignFont}">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,13 +27,6 @@
                 <RowDefinition Height="*"/> 
             </Grid.RowDefinitions>
             <ListBox  x:Name="FolderListBox" DisplayMemberPath="Url" >
-                <!--<ListBox.ItemTemplate>
-                    <DataTemplate >
-                        
-                    </DataTemplate>
-                </ListBox.ItemTemplate>-->
-                
-
             </ListBox>
             <UniformGrid Grid.Row="1" Columns="2">
                 <Button Click="AddButtonClick">Add</Button>

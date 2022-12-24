@@ -21,30 +21,13 @@ namespace PhotoGallery
   
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Folder> Folders { get; set; }
+        public ObservableCollection<Folder> Folders { get; set; } = new ObservableCollection<Folder>();
+        public List<string> Paths { get; set; } = new List<string>();
         public MainWindow()
         {
+            DataLoad();
             InitializeComponent();
-            Folders = new ObservableCollection<Folder>();
             FolderListBox.ItemsSource = Folders;
-        }
-        private void AddButtonClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.InitialDirectory = "C:\\Users";
-            dialog.IsFolderPicker = true;
-            dialog.ShowDialog();
-            Folder folder = new Folder(dialog.FileName);
-            Folders.Add(folder);
-
-            }
-            catch (Exception)
-            {
-
-               MessageBox.Show("Choose Folder");
-            }
         }
         public class Image
         {
@@ -79,7 +62,51 @@ namespace PhotoGallery
             public string Url { get; set; }
             public ObservableCollection<Image> Images { get; set; } = new ObservableCollection<Image>();
         }
+        private void AddButtonClick(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog=null;
+            bool can_add = true;
+            try
+            {
+                dialog = new CommonOpenFileDialog();
+                dialog.InitialDirectory = "C:\\Users";
+                dialog.IsFolderPicker = true;
+                dialog.ShowDialog();
 
+
+            }
+            catch (Exception)
+            {
+                 MessageBox.Show("Choose Folder");
+            }
+            finally
+            {
+                DataSave();
+            }
+
+            foreach (var item in Folders)
+            {
+                if(Path.GetFileName(dialog.FileName)==item.Url)
+                {
+                    can_add = false;
+                    MessageBox.Show("This folder already exists");
+                }
+            }
+            if(can_add)
+            {
+            Folder folder = new Folder(dialog.FileName);
+            Folders.Add(folder);
+            Paths.Add(dialog.FileName);
+            }
+
+        }
+        private void RemoveButtonClick(object sender, RoutedEventArgs e)
+        {
+            if(FolderListBox.SelectedIndex!=-1)
+            {
+                Folders.RemoveAt(FolderListBox.SelectedIndex);
+            }
+        }
         private void ImageListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             new ImagesWindow(Folders[FolderListBox.SelectedIndex].Images[ImageListBox.SelectedIndex].Photo, this).Show();
@@ -97,11 +124,36 @@ namespace PhotoGallery
             return Folders[FolderListBox.SelectedIndex].Images[ImageListBox.SelectedIndex].Photo;
         }
 
-        private void RemoveButtonClick(object sender, RoutedEventArgs e)
+        public void DataLoad()
         {
-            if(FolderListBox.SelectedIndex!=-1)
+            try
             {
-                Folders.RemoveAt(FolderListBox.SelectedIndex);
+                string json = File.ReadAllText("paths.json");
+                Paths = JsonSerializer.Deserialize<List<string>>(json);
+                foreach (var item in Paths)
+                {
+                    Folder folder = new Folder(item);
+                    Folders.Add(folder);
+
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Your Photo Gallery is empty");
+
+            }
+        }
+        public void DataSave()
+        {
+            try
+            {
+               File.WriteAllText("paths.json", JsonSerializer.Serialize(Paths));
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Cant Save Data to Json");
             }
         }
     }
